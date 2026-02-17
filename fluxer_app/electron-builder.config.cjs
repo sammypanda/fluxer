@@ -91,6 +91,7 @@ const config = (() => {
 
 		extraResources: [
 			{from: `${iconsDir}/512x512.png`, to: '512x512.png'},
+			{from: `${iconsDir}/32x32.png`, to: '32x32.png'},
 			{from: `${iconsDir}/badges`, to: 'badges'},
 			{from: `${iconsDir}/_compiled/Assets.car`, to: 'Assets.car'},
 		],

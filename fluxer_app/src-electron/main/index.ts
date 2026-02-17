@@ -33,6 +33,7 @@ import {startRpcServer, stopRpcServer} from './rpc-server.js';
 import {registerUpdater} from './updater.js';
 import {createWindow, getMainWindow, registerDisplayMediaHandlers, setQuitting, showWindow} from './window.js';
 import {startWsProxyServer, stopWsProxyServer} from './ws-proxy-server.js';
+import {createTrayEntry} from './tray-entry.js';
 
 log.transports.file.level = 'info';
 log.transports.console.level = 'debug';
@@ -130,6 +131,12 @@ if (!gotTheLock) {
 			log.error('[Init] Failed to create application menu:', error);
 		}
 
+		try {
+			createTrayEntry();
+		} catch (error: unknown) {
+			log.error('[Init] Failed to create tray entry:', error);	
+		}
+
 		createWindow();
 		registerUpdater(getMainWindow);
 
@@ -159,9 +166,9 @@ if (!gotTheLock) {
 	});
 
 	app.on('window-all-closed', () => {
-		if (process.platform !== 'darwin') {
-			app.quit();
-		}
+  		// attached to prevent the app from quitting, purposefully quit from tray
+		// (is similar to a debatable default behaviour in popular gaming chat app)
+		// TODO: add an option to exit on window close
 	});
 
 	app.on('before-quit', () => {
